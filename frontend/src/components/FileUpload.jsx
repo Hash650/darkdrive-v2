@@ -70,7 +70,7 @@ const FileUpload = ({ setFilesList }) => {
 					text='Choose how to upload your files.'
 					checkbox={true}
 					closeModal={closeKeyModal}
-					onSubmit={() => handleUpload(password)}
+					onSubmit={(password) => handleUpload(password)}
 				/>
 			)}
 			<div className='bg-primary p-8 h-full flex flex-col flex-1'>
