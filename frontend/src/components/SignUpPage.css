@@ -1,0 +1,30 @@
+.loading-glimmer {
+    position: relative;
+    overflow: hidden;
+    cursor: not-allowed;
+}
+
+.loading-glimmer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        45deg,
+        rgba(255, 235, 59, 0) 0%,
+        rgba(255, 235, 59, 0.8) 50%,
+        rgba(255, 235, 59, 0) 100%
+    );
+    animation: glimmer-slide 1.2s linear infinite;
+}
+
+@keyframes glimmer-slide {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(400%);
+    }
+}

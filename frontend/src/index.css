@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+@theme {
+	--color-primary: #0a0a0a; /* Used for header backgrounds/elements */
+	--color-background: #161616; /* Overall background */
+	--color-secondary: #ffd700; /* Accent elements (gold) */
+	--color-tertiary: #dfdfdf; /* Text color (gold) */
+	--color-accent: #ffd700; /* Additional accents (gold) */
+	--color-highlight: #ffc700; /* Highlights (gold) */
+
+	--font-display: helvetica, sans-serif;
+}
+
+@layer base {
+	body {
+		@apply text-tertiary bg-background;
+	}
+}
+
+@layer components {
+	h1 {
+		@apply text-3xl font-bold;
+	}
+
+	h2 {
+		@apply text-2xl text-center;
+	}
+
+	nav {
+		@apply bg-primary flex justify-between items-center px-8 sm:px-16;
+	}
+
+	nav ul {
+		@apply flex gap-8;
+	}
+
+	img {
+		@apply rounded-lg;
+	}
+
+	hr {
+		@apply border-white/40;
+	}
+
+	input {
+		@apply border-2 rounded-lg p-2 border-white/40;
+	}
+
+	.navLink {
+		@apply border-b-4 border-transparent py-8 text-lg transition-colors duration-200;
+	}
+
+	.navLink:hover {
+		@apply text-highlight;
+	}
+
+	button {
+		@apply py-3 px-8 bg-accent text-primary rounded-lg transition-colors duration-200 cursor-pointer;
+	}
+
+	button:hover {
+		@apply bg-highlight;
+	}
+
+	footer {
+		@apply bg-primary p-8 w-full;
+	}
+
+	.custom-scrollbar::-webkit-scrollbar {
+		display: none; /* Doesn't work */
+	}
+
+	.custom-scrollbar {
+		scrollbar-width: none; /* Firefox */
+		-ms-overflow-style: none; /* IE & Edge */
+	}
+}
