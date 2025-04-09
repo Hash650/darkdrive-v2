@@ -8,37 +8,25 @@ const fileNameEndpoint = `http://127.0.0.1:8000/users/upload/`;
 // const uploadEndpoint = `${FILE_API_URL}/upload/`;
 const uploadEndpoint = `http://127.0.0.1:8001/upload/${localStorage.getItem("email")}`;
 
-
 const fileEndPoint = "http://localhost:8080/api/files";
 
-
-
-
-export const uploadFile = async (file,password) => {
-
-
-	password = "hayyan";  //temporary for testing
-
+export const uploadFile = async (file, password) => {
 	const formData = new FormData();
 	formData.append("file", file);
 	formData.append("password", password);
 
-
-	const response = await axios.post(`${fileEndPoint}/upload`, formData,{
-		headers:{
-			Authorization: `Bearer ${localStorage.getItem("userToken")}`
-		}
+	const response = await axios.post(`${fileEndPoint}/upload`, formData, {
+		headers: {
+			Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+		},
 	});
 
-	if(response.status!== 200)
-	{
+	if (response.status !== 200) {
 		throw new Error("Upload failed");
 	}
 
 	return response.data;
-
-}
-
+};
 
 export const uploadFiles = async (files) => {
 	try {
