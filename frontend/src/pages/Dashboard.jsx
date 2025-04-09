@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import KeyModal from "../components/KeyModal";
 import FileUpload from "../components/FileUpload";
-import { Download, Trash2 } from "lucide-react";
+import { Download, Lock, Trash2 } from "lucide-react";
 
 const Dashboard = () => {
 	const [files, setFiles] = useState([]);
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [showKeyModal, setShowKeyModal] = useState(false);
 	const [downloadError, setDownloadError] = useState("");
+	const [lockEnabled, setLockEnabled] = useState(false);
 
 	const fileEndPoint = "http://localhost:8080/api/files";
 	const API_URL = "http://localhost:8080/api/files";
@@ -28,12 +29,12 @@ const Dashboard = () => {
 		}
 	};
 
-	const downloadFile = async (password) => {
+	const downloadFile = async (password, lockEnabled) => {
 		try {
 			const response = await axios.get(`${API_URL}/download/${selectedFile.id}`, {
 				params: {
 					password: password,
-					locked: false,
+					locked: lockEnabled,
 				},
 				responseType: "blob",
 				headers: {
@@ -94,9 +95,10 @@ const Dashboard = () => {
 			{showKeyModal && (
 				<KeyModal
 					text='Enter the encryption key'
-					checked={false}
-					onSubmit={closeKeyModal}
-					onPasswordEnter={downloadFile}
+					checkbox={true}
+					showInput={lockEnabled}
+					onSubmit={(password, isLocked) => handleUpload(password, isLocked)}
+					setShowInput={setLockEnabled}
 					closeModal={closeKeyModal}
 				/>
 			)}
@@ -114,6 +116,12 @@ const Dashboard = () => {
 								>
 									<p>{file.fileName}</p>
 									<div className='flex gap-4'>
+										<button
+											title='Locked'
+											className='w-fit p-0 bg-transparent text-accent underline'
+										>
+											<Lock />
+										</button>
 										<button
 											title='Download'
 											onClick={() => handleDownloadClick(file)}

@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
 
-const KeyModal = ({ text, closeModal, onSubmit, checkbox, onPasswordEnter }) => {
+const KeyModal = ({ text, closeModal, onSubmit, checkbox, showInput, setShowInput }) => {
 	const inputRef = useRef();
-	const [showInput, setShowInput] = useState(false);
+	const boxRef = useRef();
 	const [downloadError, setDownloadError] = useState("");
 
 	// Function to set error message from parent
@@ -17,7 +17,7 @@ const KeyModal = ({ text, closeModal, onSubmit, checkbox, onPasswordEnter }) => 
 				{checkbox && (
 					<div className='w-full items-start'>
 						<input
-							name='lock'
+							ref={boxRef}
 							type='checkbox'
 							checked={showInput}
 							onChange={(e) => setShowInput(e.target.checked)}
