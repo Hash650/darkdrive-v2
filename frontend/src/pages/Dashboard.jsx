@@ -7,9 +7,8 @@ import { Download, Lock, Trash2 } from "lucide-react";
 const Dashboard = () => {
 	const [files, setFiles] = useState([]);
 	const [selectedFile, setSelectedFile] = useState(null);
-	const [showKeyModal, setShowKeyModal] = useState(false);
+	const [showModal, setShowModal] = useState(false);
 	const [downloadError, setDownloadError] = useState("");
-	const [lockEnabled, setLockEnabled] = useState(false);
 
 	const fileEndPoint = "http://localhost:8080/api/files";
 	const API_URL = "http://localhost:8080/api/files";
@@ -29,12 +28,11 @@ const Dashboard = () => {
 		}
 	};
 
-	const downloadFile = async (password, lockEnabled) => {
+	const downloadFile = async (password) => {
 		try {
 			const response = await axios.get(`${API_URL}/download/${selectedFile.id}`, {
 				params: {
 					password: password,
-					locked: lockEnabled,
 				},
 				responseType: "blob",
 				headers: {
@@ -54,7 +52,7 @@ const Dashboard = () => {
 			document.body.removeChild(link); // Cleanup
 
 			// Close modal after successful download
-			setShowKeyModal(false);
+			setShowModal(false);
 		} catch (err) {
 			// in this case the user entered the wrong pass
 			setDownloadError("Download failed, please check password.");
@@ -82,24 +80,18 @@ const Dashboard = () => {
 
 	const handleDownloadClick = (file) => {
 		setSelectedFile(file);
-		setShowKeyModal(true);
-	};
-
-	const closeKeyModal = () => {
-		setShowKeyModal(false);
-		setDownloadError("");
+		if (file.locked) {
+			setShowModal(true);
+		}
 	};
 
 	return (
 		<>
-			{showKeyModal && (
+			{showModal && (
 				<KeyModal
 					text='Enter the encryption key'
-					checkbox={true}
-					showInput={lockEnabled}
-					onSubmit={(password, isLocked) => handleUpload(password, isLocked)}
-					setShowInput={setLockEnabled}
-					closeModal={closeKeyModal}
+					onSubmit={(password) => downloadFile(password)}
+					closeModal={closeModal}
 				/>
 			)}
 			<main className='flex flex-col md:flex-row md:flex-grow'>
@@ -116,12 +108,7 @@ const Dashboard = () => {
 								>
 									<p>{file.fileName}</p>
 									<div className='flex gap-4'>
-										<button
-											title='Locked'
-											className='w-fit p-0 bg-transparent text-accent underline'
-										>
-											<Lock />
-										</button>
+										{file.locked && <Lock />}
 										<button
 											title='Download'
 											onClick={() => handleDownloadClick(file)}

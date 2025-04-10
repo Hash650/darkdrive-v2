@@ -32,24 +32,30 @@ const FileUpload = ({ setFilesList }) => {
 		}
 	};
 
-	const closeKeyModal = () => {
-		setShowModal(false);
-		setDownloadError("");
-	};
-
-	//hashir
+	/**
+	 * Handles file upload.
+	 *
+	 * @param {string} password - Empty string if lockEnabled is false.
+	 * @param {boolean} lockEnabled - True if user wants to lock the file.
+	 */
 	const handleUpload = async (password) => {
+		// Check if there is a file to upload.
 		if (files.length === 0) {
 			alert("Please select files to upload!");
 			return;
 		}
 
-		setUploadStatus("Uploading...");
+		setUploadStatus("Uploading..."); // Change upload status
 
 		try {
+			// Send a call to the backend to upload a file.
 			const response = await uploadFile(files[0], password);
 			console.log(response);
+
+			// no idea lol
 			setFilesList((prevFiles) => [...prevFiles, response]);
+
+			// If file is uploaded, show it.
 			setTimeout(() => {
 				setUploadStatus("Uploaded!");
 				setTimeout(() => setUploadStatus(""), 2000);
@@ -57,9 +63,11 @@ const FileUpload = ({ setFilesList }) => {
 
 			setUploadStatus("Uploading...");
 
-			setFiles([]);
+			setFiles([]); // Clear files after uploading.
+			setShowModal(false); // Close the modal if upload was successful.
 		} catch (err) {
 			setUploadStatus(err.message);
+			setTimeout(() => setUploadStatus(""), 2000);
 		}
 	};
 
@@ -68,9 +76,11 @@ const FileUpload = ({ setFilesList }) => {
 			{showModal && (
 				<KeyModal
 					text='Choose how to upload your files.'
+					filename={files[0].name}
 					checkbox={true}
-					closeModal={closeKeyModal}
+					closeModal={() => setShowModal(false)}
 					onSubmit={(password) => handleUpload(password)}
+					uploadStatus={uploadStatus}
 				/>
 			)}
 			<div className='bg-primary p-8 h-full flex flex-col flex-1'>
@@ -115,19 +125,6 @@ const FileUpload = ({ setFilesList }) => {
 							<button onClick={() => setShowModal(true)} className='mt-4 w-full'>
 								Upload Files
 							</button>
-						</div>
-					)}
-
-					{/* Upload Status */}
-					{uploadStatus && (
-						<div
-							className={`mt-4 p-3 rounded-lg ${
-								uploadStatus.includes("failed")
-									? "bg-red-900/50 text-red-200"
-									: "bg-blue-900/50 text-blue-200"
-							}`}
-						>
-							{uploadStatus}
 						</div>
 					)}
 				</div>

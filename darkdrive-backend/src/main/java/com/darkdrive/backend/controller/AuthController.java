@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/auth")
@@ -54,22 +53,18 @@ public class AuthController {
             String token = authService.login(request.getEmail(), request.getPassword());
 
             return ResponseEntity.ok(token);
-        } 
-        
+        }
+
         catch (RuntimeException rte) {
 
-            if(rte.getMessage().equals("Invalid Credentials"))
-            {
+            if (rte.getMessage().equals("Invalid Credentials")) {
 
                 return ResponseEntity.status(404).body(rte.getMessage());
-            }
-            else
-            {
-                
+            } else {
+
                 return ResponseEntity.status(401).body(rte.getMessage());
 
             }
-
 
         }
 
